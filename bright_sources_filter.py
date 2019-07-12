@@ -2,20 +2,31 @@
 eq must be a list of astropy SkyCoord objects in equitorial coordinates
 gal must be a list of astropy SkyCoord objects in galactic functions
 
-both can be obtained using coordinates.py functions equitorial and galactic
+Both can be obtained and entered as arguments here using coordinates.py functions equitorial and galactic or this function can generate them for you.
 
-Returns a list of coordinates (eq and gal), times, and distances to bright sources only at times where the object in question is far enough away from the bright sources
+Returns a list of coordinates (eq and gal), times, and distances to bright sources only at times where the object in question is far enough away from the bright sources.
 
 Samantha Lomuscio
 """
 
-from coordinates import equatorial
+from coordinates import equatorial, galactic
 from astropy.coordinates import SkyCoord
 
-def bright_source_filter(eq=None,gal=None,tstart=None,tend=None,tstep=None,times=None):
-    
-    skycoords_sun = equatorial(obj='sun', tstart=tstart, tend=tend, tstep=tstep)
-    skycoords_moon = equatorial(obj='moon', tstart=tstart, tend=tend, tstep=tstep)
+def bright_source_filter(obj=None, tstart=None, tend=None, tstep=None, eq=None, gal=None, mode=None): #, times=None):
+
+    if eq is None and gal is None:
+        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+
+    if eq is None and gal is not None:
+        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+
+    if eq is not None and gal is None:
+        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+
+
+    skycoords_sun = equatorial(obj='sun', tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+    skycoords_moon = equatorial(obj='moon', tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
 
     #make list of SkyCoord objects for bright sources --- from Fermi LAT 8-Year Point Source Catalog                                                               
@@ -36,18 +47,67 @@ def bright_source_filter(eq=None,gal=None,tstart=None,tend=None,tstep=None,times
     #find distances to sun, moon, bright sources                                    
     dist_sun = list()
     dist_moon = list()
-    dist_sources = list()
+    dist_1 = list()
+    dist_2 = list()
+    dist_3 = list()
+    dist_4 = list()
+    dist_5 = list()
+    dist_6 = list()
+    dist_7 = list()
+    dist_8 = list()
+    dist_9 = list()
+    dist_10 = list()
+
     for i in range(0,len(eq)):
-        dist_sun.append(eq[i].separation(skycoords_sun[i]))
-        dist_moon.append(eq[i].separation(skycoords_moon[i]))
-        
-        for source in skycoords_sources:
-            dist_sources.append(eq[i].separation(source))
+        dist_sun.append(eq[i].separation(skycoords_sun[i]).degree)
+        dist_moon.append(eq[i].separation(skycoords_moon[i]).degree)
+        dist_1.append(eq[i].separation(source1).degree)
+        dist_2.append(eq[i].separation(source2).degree)
+        dist_3.append(eq[i].separation(source3).degree)
+        dist_4.append(eq[i].separation(source4).degree)
+        dist_5.append(eq[i].separation(source5).degree)
+        dist_6.append(eq[i].separation(source6).degree)
+        dist_7.append(eq[i].separation(source7).degree)
+        dist_8.append(eq[i].separation(source8).degree)
+        dist_9.append(eq[i].separation(source9).degree)
+        dist_10.append(eq[i].separation(source10).degree)
 
     #zip galactic, equitorial, time, distances to sources (sun moon bright) info into one list
-    data = zip(gal, eq, times, dist_sun, dist_moon, dist_sources)
+    data = zip(gal, eq, dist_sun, dist_moon, dist_1, dist_2, dist_3, dist_4, dist_5, dist_6, dist_7, dist_8, dist_9, dist_10) #, times)
 
     #remove items in list too close to galactic plane, sun, moon, or bright sources
-    data2 = [item for item in data if  abs(item[0].b.degree) > 20.0 or item[3].degree > 20 or  item[4].degree > 20 or item[5] > 20]
+#    data2 = [item for item in data if abs(item[0].b.degree) > 20.0 or item[2] > 20.0 or  item[3] > 5.0 or item[4] > 20.0, or item[5] > 20.0,or item[6] > 20.0, or item[7] > 20.0, or item[8] > 20.0, or item[9] > 20.0, or item[10] > 20.0, or item[11] > 20.0, or item[12] > 20.0, or item[13] > 20.0]
+
+    data2 = list()
+
+    for item in data:
+        if abs(item[0].b.degree) < 20.0:
+            continue
+        elif item[2] < 20.0:
+            continue
+        elif item[3] < 5.0:
+            continue
+        elif item[4] < 20.0:
+            continue
+        elif item[5] < 20.0:
+            continue
+        elif item[6] < 20.0:
+            continue
+        elif item[7] < 20.0:
+            continue
+        elif item[8] < 20.0:
+            continue
+        elif item[9] < 20.0:
+            continue
+        elif item[10] < 20.0:
+            continue
+        elif item[11] < 20.0:
+            continue
+        elif item[12] < 20.0:
+            continue
+        elif item[13] < 20.0:
+            continue
+        else:
+            data2.append(item)
 
     return data2
