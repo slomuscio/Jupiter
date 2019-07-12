@@ -12,7 +12,10 @@ from astropy.coordinates import solar_system_ephemeris, get_body, SkyCoord
 from astropy.time import Time
 import numpy as np
 
-def equatorial(obj=None, tstart=None, tend=None, tstep=None, time=None):
+def equatorial(obj=None, tstart=None, tend=None, tstep=None, mode=None, time=None):
+    if mode is None:
+        raise AssertionError('Must specify mode: either center times (c) or boundary times (b).')
+
     if time is not None and (tstart is not None or tend is not None or tstep is not None):
         raise AssertionError('Must enter one time, or a start time, end time, and time step')
 
@@ -24,8 +27,10 @@ def equatorial(obj=None, tstart=None, tend=None, tstep=None, time=None):
         raise AssertionError('Must enter start time, end time, and time step')
 
     elif time is None and (tstart is not None and tend is not None and tstep is not None):
-        tstart = tstart.mjd + (tstep/2) #use this line if you want times in the center of timeranges, dont use if you want coordinates at the time intervals themselves
-#        tstart = tstart.mjd # use if you want coordinates at time intervals not at center of intervals
+        if mode == 'c':
+            tstart = tstart.mjd + (tstep/2) #use this line if you want times in the center of timeranges, dont use if you want coordinates at the time intervals themselves
+        elif mode == 'b':
+            tstart = tstart.mjd # use if you want coordinates at time intervals not at center of intervals
         tend = tend.mjd
         times = np.arange(tstart, tend, tstep, dtype=float)
         times_list = Time(times, format='mjd').fits
@@ -40,7 +45,10 @@ def equatorial(obj=None, tstart=None, tend=None, tstep=None, time=None):
 
     return jup_ephem
 
-def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None):
+def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None, mode=None):
+    if mode is None:
+        raise AssertionError('Must specify mode: either center times (c) or boundary times (b).')
+
     if time is not None and (tstart is not None or tend is not None or tstep is not None):
         raise AssertionError('Must enter one time, or a start time, end time, and time step')
 
@@ -52,8 +60,10 @@ def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None):
         raise AssertionError('Must enter start time, end time, and time step')
 
     elif time is None and (tstart is not None and tend is not None and tstep is not None):
-        tstart = tstart.mjd + (tstep/2)  #use this line if you want times in the center of timeranges, dont use if you want coordinates at the time intervals themselves 
-#        tstart= tstart.mjd # use if you want coordinates at time intervals not at center of intervals
+        if mode == 'c':
+            tstart = tstart.mjd + (tstep/2)  #use this line if you want times in the center of timeranges, dont use if you want coordinates at the time intervals themselves 
+        elif mode == 'b':
+            tstart= tstart.mjd # use if you want coordinates at time intervals not at center of intervals
         tend = tend.mjd
         times = np.arange(tstart, tend, tstep, dtype=float)
         times_list = Time(times, format='mjd').fits
