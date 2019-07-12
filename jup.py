@@ -61,7 +61,7 @@ skycoords_eq = equatorial(obj='jupiter', tstart=time_start, tend=time_end, tstep
 skycoords_gal = galactic(obj='jupiter', tstart=time_start, tend=time_end, tstep=time_step) #used to remove points too close to galactic plane
 
 #removes times/positions when object is near bright sources (sun, moon, others)
-data = bright_source_filter(eq=skycoords_eq, gal=skycoords_gal, tstart=time_start,tend=time_end, tstep=time_step, times=times)
+data = bright_source_filter(obj='jupiter', tstart=time_start,tend=time_end, tstep=time_step, times=times)
 
 #loop through times to create stacked counts map
 for i in range(1,len(data)):
