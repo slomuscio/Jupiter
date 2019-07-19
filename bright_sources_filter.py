@@ -62,13 +62,11 @@ def plane_and_sources_filter(obj=None, tstart=None, tend=None, tstep=None, eq=No
         dist_9.append(eq[i].separation(source9).degree)
         dist_10.append(eq[i].separation(source10).degree)
 
-    data = zip(gal, dist_1, dist_2, dist_3, dist_4, dist_5, dist_6, dist_7, dist_8, dist_9, dist_10)
+    data = zip(eq, gal, dist_1, dist_2, dist_3, dist_4, dist_5, dist_6, dist_7, dist_8, dist_9, dist_10)
     data2 = list()
 
     for item in data:
-        if abs(item[0].b.degree) < 20.0:
-            continue
-        elif item[1] < 10.0:
+        if abs(item[1].b.degree) < 20.0:
             continue
         elif item[2] < 10.0:
             continue
@@ -87,6 +85,8 @@ def plane_and_sources_filter(obj=None, tstart=None, tend=None, tstep=None, eq=No
         elif item[9] < 10.0:
             continue
         elif item[10] < 10.0:
+            continue
+        elif item[11] < 10.0:
             continue
         else:
             data2.append(item)
@@ -118,13 +118,13 @@ def sun_moon_filter(obj=None, tstart=None, tend=None, tstep=None, eq=None, gal=N
         dist_sun.append(eq[i].separation(skycoords_sun[i]).degree)
         dist_moon.append(eq[i].separation(skycoords_moon[i]).degree)
 
-    data = zip(gal, dist_sun, dist_moon)
+    data = zip(eq, gal, dist_sun, dist_moon)
     data2 = list()
 
     for item in data:
-        if item[1] < 20.0:
+        if item[2] < 20.0:
             continue
-        elif item[2] < 5.0:
+        elif item[3] < 5.0:
             continue
         else:
             data2.append(item)
