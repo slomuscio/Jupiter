@@ -13,17 +13,17 @@ Samantha Lomuscio
 from coordinates import equatorial, galactic
 from astropy.coordinates import SkyCoord
 
-def plane_and_sources_filter(obj=None, tstart=None, tend=None, tstep=None, eq=None, gal=None, mode=None): #, times=None):
+def plane_and_sources_filter(obj=None, frame=None, tstart=None, tend=None, tstep=None, eq=None, gal=None, mode=None): #, times=None):
 
     if eq is None and gal is None:
-        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
-        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        eq = equatorial(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        gal = galactic(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     if eq is None and gal is not None:
-        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        eq = equatorial(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     if eq is not None and gal is None:
-        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        gal = galactic(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     #make list of SkyCoord objects for bright sources --- from Fermi LAT 8-Year Point Source Catalog                                                                                                   
     source1 = SkyCoord('21h58m51.4s -30d13m30s')
@@ -96,20 +96,20 @@ def plane_and_sources_filter(obj=None, tstart=None, tend=None, tstep=None, eq=No
 
 
 
-def sun_moon_filter(obj=None, tstart=None, tend=None, tstep=None, eq=None, gal=None, mode=None):
+def sun_moon_filter(obj=None, frame=None, tstart=None, tend=None, tstep=None, eq=None, gal=None, mode=None):
 
     if eq is None and gal is None:
-        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
-        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        eq = equatorial(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        gal = galactic(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     if eq is None and gal is not None:
-        eq = equatorial(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        eq = equatorial(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     if eq is not None and gal is None:
-        gal = galactic(obj=obj, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+        gal = galactic(obj=obj, frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
-    skycoords_sun = equatorial(obj='sun', tstart=tstart, tend=tend, tstep=tstep, mode=mode)
-    skycoords_moon = equatorial(obj='moon', tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+    skycoords_sun = equatorial(obj='sun', frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
+    skycoords_moon = equatorial(obj='moon', frame=frame, tstart=tstart, tend=tend, tstep=tstep, mode=mode)
 
     dist_sun = list()
     dist_moon = list()

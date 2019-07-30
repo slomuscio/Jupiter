@@ -12,7 +12,7 @@ from astropy.coordinates import solar_system_ephemeris, get_body, SkyCoord
 from astropy.time import Time
 import numpy as np
 
-def equatorial(obj=None, tstart=None, tend=None, tstep=None, mode=None, time=None):
+def equatorial(obj=None, frame=None, tstart=None, tend=None, tstep=None, mode=None, time=None):
     if mode is None:
         raise AssertionError('Must specify mode: either center times (c) or boundary times (b).')
 
@@ -21,7 +21,11 @@ def equatorial(obj=None, tstart=None, tend=None, tstep=None, mode=None, time=Non
 
     elif time is not None:
         with solar_system_ephemeris.set('jpl'):
-            jup_ephem= get_body(obj, time)
+            jup= get_body(obj, time)
+            ra = jup.ra.value
+            dec = jup.dec.value
+            time = jup.obstime.value
+            jup_ephem = SkyCoord(ra, dec, frame=frame, unit='deg', obstime=time)
 
     elif time is None and (tstart is None or tend is None or tstep is None):
         raise AssertionError('Must enter start time, end time, and time step')
@@ -41,11 +45,15 @@ def equatorial(obj=None, tstart=None, tend=None, tstep=None, mode=None, time=Non
         for date in times_list:
             with solar_system_ephemeris.set('jpl'):
                 jup = get_body(obj, date)
-                jup_ephem.append(jup)
+                ra = jup.ra.value
+                dec = jup.dec.value
+                time = jup.obstime.value
+                jup2 = SkyCoord(ra, dec, frame=frame, unit='deg', obstime=time)
+                jup_ephem.append(jup2)
 
     return jup_ephem
 
-def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None, mode=None):
+def galactic(obj=None, frame=None, tstart=None, tend=None, tstep=None, time=None, mode=None):
     if mode is None:
         raise AssertionError('Must specify mode: either center times (c) or boundary times (b).')
 
@@ -54,8 +62,12 @@ def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None, mode=None)
 
     elif time is not None:
         with solar_system_ephemeris.set('jpl'):
-            jup_ephem= get_body(obj, time).galactic
-
+            jup = get_body(obj, date)
+            ra = jup.ra.value
+            dec = jup.dec.value
+            time = jup.obstime.value
+            jup_ephem = SkyCoord(ra, dec, frame=frame, unit='deg', obstime=time)
+            
     elif time is None and (tstart is None or tend is None or tstep is None):
         raise AssertionError('Must enter start time, end time, and time step')
 
@@ -73,7 +85,11 @@ def galactic(obj=None, tstart=None, tend=None, tstep=None, time=None, mode=None)
     
         for date in times_list:
             with solar_system_ephemeris.set('jpl'):
-                jup = get_body(obj, date).galactic
-                jup_ephem.append(jup)
+                jup = get_body(obj, date)
+                ra = jup.ra.value
+                dec = jup.dec.value
+                time = jup.obstime.value
+                jup2 = SkyCoord(ra, dec, frame=frame, unit='deg', obstime=time)
+                jup_ephem.append(jup2.galactic)
 
     return jup_ephem
